@@ -1,0 +1,40 @@
+nav {
+    background-color: rgb(64, 238, 250);
+    padding: 10px;
+    width: 100%;
+}
+
+.nav-content {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: auto;
+}
+
+nav h3 {
+    font-size: 20px;
+}
+
+.btn_input {
+    background-color: #ffdca4;
+    border: none;
+    padding: 5px;
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
+    transition: all .3s ease;
+}
+
+.btn_input:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+}
+
+.btn_input:active {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+    background-color: rgb(160, 212, 255);
+}
+
+.link {
+    color: rgb(0, 85, 155);
+    text-decoration: none;
+    padding: 5px;
+    font-size: 18px;
+}
