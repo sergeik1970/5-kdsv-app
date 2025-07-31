@@ -6,6 +6,7 @@ import { setUser } from './redux/slices/userSlice'
 import "./App.css"
 import Home from './Home'
 import Navbar from './Navbar'
+import Register from './Register'
 
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -35,6 +36,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />}></Route>
+        <Route path="/register" element={<Register />}></Route>
       </Routes>
     </BrowserRouter>
   )

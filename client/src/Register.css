@@ -1,0 +1,117 @@
+form {
+    background-color: rgb(255, 255, 255);
+    color: rgb(30, 30, 30);
+    max-width: 350px;
+    margin: auto;
+    border: 1px solid rgb(239, 239, 239);
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    margin-top: 20px;
+    transition: all .3s ease;
+}
+
+form:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+}
+
+form h2 {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: normal;
+}
+
+form label {
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+form input {
+    margin-top: 10px;
+    margin-left: 10px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(183, 223, 255);
+    width: 90%;
+    height: 30px;
+    box-sizing: border-box;
+    padding: 12px;
+    transition: all .3s ease;
+
+}
+
+form input:hover {
+    border: 1px solid rgb(148, 207, 255);
+}
+
+form input:focus {
+    outline: rgb(98, 184, 255);
+    border-color: rgb(26, 152, 255);
+}
+
+form textarea {
+    margin-top: 10px;
+    margin-left: 10px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(183, 223, 255);
+    width: 90%;
+    height: 200px;
+    max-width: 90%;
+    box-sizing: border-box;
+    padding: 12px;
+    transition: all .3s ease;
+}
+
+form textarea:hover {
+    border: 1px solid rgb(148, 207, 255);
+}
+
+form textarea:focus {
+    outline: rgb(98, 184, 255);
+    border-color: rgb(26, 152, 255);
+}
+
+form .file {
+    height: 50px;
+}
+
+.form-p {
+    text-align: center;
+    margin: 10px;
+}
+
+form button,
+button {
+    font-size: 20px;
+    padding: 10px;
+    margin: auto;
+    display: block;
+    text-decoration: none;
+    background-color: rgb(183, 223, 255);
+    border: none;
+    margin-top: 15px;
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
+    transition: all .3s ease;
+}
+
+form button:hover,
+button:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+}
+
+form button:active,
+button:active {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+    background-color: rgb(160, 212, 255);
+}
+
+form a {
+    text-decoration: none;
+}
+
+.form_signup {
+    margin-top: 0px;
+}
+
+.signup_form h2 {
+    font-size: xx-large;
+    text-align: center;
+}
