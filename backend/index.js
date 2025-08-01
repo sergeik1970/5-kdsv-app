@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import cookieParser from 'cookie-parser';
+import authRoutes from './routes/auth.js';
 // Чтобы работало подключение бд
 import dotenv from 'dotenv';
 dotenv.config();
@@ -19,6 +20,14 @@ app.use(cors({
 
 // Для чтения куки
 app.use(cookieParser());
+
+// Маршруты
+app.use(authRoutes);
+
+// Проверка
+app.get('/', (req, res) => {
+  res.send('Сервер работает');
+});
 
 // Подключение базы данных
 mongoose.connect(process.env.MONGODB_URI)
