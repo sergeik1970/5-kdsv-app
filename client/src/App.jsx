@@ -18,16 +18,28 @@ function App() {
   // Автоотправление cookie
   axios.defaults.withCredentials = true;
   // useEffect для получения данных с сервера
-  useEffect(() => {
-    // Получение данных с сервера
-    axios.get(apiUrl)
-      .then(user => {
-        dispatch(setUser(user.data))
-        console.log(user)
-      })
-      .catch(err => console.log("Ошибка при получении пользователя: ", err))
+  // useEffect(() => {
+  //   // Получение данных с сервера
+  //   axios.get(apiUrl)
+  //     .then(user => {
+  //       dispatch(setUser(user.data))
+  //       console.log(user)
+  //     })
+  //     .catch(err => console.log("Ошибка при получении пользователя: ", err))
 
-  }, [])
+  // }, [])
+
+  useEffect(() => {
+  axios.get(`${apiUrl}/me`, { withCredentials: true })
+    .then(res => {
+      if (res.data.username) {
+        dispatch(setUser(res.data));
+      }
+    })
+    .catch(err => {
+      console.log("Пользователь не авторизован");
+    });
+}, []);
 
   const user = useSelector((state) => state.user);
 

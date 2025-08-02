@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-import { login, register } from '../controllers/authController.js';
+// import { login, register } from '../controllers/authController.js';
 const router = express.Router();
 
 // router.post('/login', login);
@@ -80,52 +80,26 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// Проверка авторизации
+router.get("/me", (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json("Not authenticated");
+
+  jwt.verify(token, process.env.JWT_SECRET || "jwt-secret-key", (err, decoded) => {
+    if (err) return res.status(403).json("Token is invalid");
+
+    return res.json({ username: decoded.username, email: decoded.email });
+  });
+});
+
 // Выход
-// router.get('/logout', (req, res) => {
-//   res.clearCookie('token').json('Выход выполнен');
-// });
+router.get('/logout', (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None"
+  });
+  return res.json("Success");
+});
 
 export default router;
-
-// import express from 'express';
-// import User from '../models/User.js';
-// import bcrypt from 'bcryptjs';
-// import jwt from 'jsonwebtoken';
-
-// const router = express.Router();
-
-// // Регистрация
-// router.post('/register', async (req, res) => {
-//   const { username, email, password } = req.body;
-//   try {
-//     const existingUser = await User.findOne({ email });
-//     if (existingUser) return res.status(400).json('Пользователь уже существует');
-
-//     const hashedPassword = await bcrypt.hash(password, 10);
-//     const newUser = new User({ username, email, password: hashedPassword });
-//     await newUser.save();
-//     res.status(200).json('Пользователь зарегистрирован');
-//   } catch (err) {
-//     res.status(500).json('Ошибка регистрации');
-//   }
-// });
-
-// // Проверка авторизации
-// router.get('/profile', async (req, res) => {
-//   const token = req.cookies.token;
-//   if (!token) return res.status(401).json('Нет токена');
-//   try {
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-//     const user = await User.findById(decoded.id).select('-password');
-//     res.json(user);
-//   } catch {
-//     res.status(401).json('Неверный токен');
-//   }
-// });
-
-// // Выход
-// router.get('/logout', (req, res) => {
-//   res.clearCookie('token').json('Выход выполнен');
-// });
-
-// export default router;

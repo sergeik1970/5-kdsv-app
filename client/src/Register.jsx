@@ -15,7 +15,7 @@ const Register = () => {
     e.preventDefault();
 
     axios
-      .post(`${apiUrl}/register`, { username, email, password })
+      .post(`${apiUrl}/register`, { username, email, password }, { withCredentials: true })
       .then((res) => {
         dispatch(resetRegister());
         navigate("/login");

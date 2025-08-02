@@ -17,7 +17,7 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post(`${apiUrl}/login`, { email, password })
+      .post(`${apiUrl}/login`, { email, password }, { withCredentials: true })
       .then((res) => {
         if (res.data.username) {
           dispatch(setUser(res.data));
