@@ -3,6 +3,7 @@ import userReducer from './slices/userSlice';
 import registerReducer from './slices/registerSlice';
 import loginReducer from './slices/loginSlice';
 import postReducer from './slices/postsSlice';
+import noticeReducer from './slices/noticeSlice';
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     register: registerReducer,
     login: loginReducer,
     posts: postReducer,
+    notice: noticeReducer,
   },
 });
 

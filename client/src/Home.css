@@ -84,3 +84,30 @@
     line-height: 1.2;
     padding-top: 10px;
 }
+
+/* Notice */
+.notice-banner {
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  padding: 10px;
+  margin: 10px;
+  color: #856404;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+}
+
+.notice-icon {
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.notice-close {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #856404;
+}
