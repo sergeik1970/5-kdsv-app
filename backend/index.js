@@ -3,6 +3,7 @@ import cors from 'cors'
 import mongoose from 'mongoose'
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.js';
+import postRoutes from './routes/posts.js';
 // Чтобы работало подключение бд
 import dotenv from 'dotenv';
 dotenv.config();
@@ -23,6 +24,7 @@ app.use(cookieParser());
 
 // Маршруты
 app.use(authRoutes);
+app.use('/', postRoutes);
 
 // Проверка
 app.get('/', (req, res) => {
