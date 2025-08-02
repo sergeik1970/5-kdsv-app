@@ -1,5 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { apiUrl } from './config';
 import "./Navbar.css";
 
 function Navbar() {
