@@ -16,22 +16,25 @@ router.post('/create', async (req, res) => {
 });
 
 // Получить все посты
-router.get('/', async (req, res) => {
-  try {
-    const limit = parseInt(req.query.limit) || 5;
-    const page = parseInt(req.query.page) || 1;
-    const skip = (page - 1) * limit;
 
-    const posts = await Post.find()
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
+router.get('/getposts', async (req, res) => {
+    try {
+        const limit = 2;
+        const page = parseInt(req.query.page || "1", 10);
+        const skip = (page - 1) * limit;
 
-    res.json(posts);
-  } catch (err) {
-    console.error("Ошибка при получении постов:", err);
-    res.status(500).json("Server error");
-  }
+        const posts = await Post.aggregate([
+            { $project: { title: 1, description: 1, email: 1, username: 1, createdAt: 1, file: 1 } },
+            { $sort: { createdAt: -1 } },
+            { $skip: skip },
+            { $limit: limit }
+        ]).allowDiskUse(true);
+
+        res.json(posts);
+    } catch (err) {
+        console.error("Ошибка в /getposts:", err.message, err.stack);
+        res.status(500).json({ error: "Ошибка сервера при получении постов" });
+    }
 });
 
 export default router;
