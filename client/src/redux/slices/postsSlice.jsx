@@ -1,5 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const initialState = {
   posts: [],
@@ -22,7 +24,20 @@ const postSlice = createSlice({
       state.page = 1;
       state.hasMore = true;
     }
-  }
+  },
+  extraReducers: (builder) => {
+  builder
+    .addCase(createPost.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(createPost.fulfilled, (state, action) => {
+      state.loading = false;
+      state.posts.unshift(action.payload); // добавим пост в начало списка
+    })
+    .addCase(createPost.rejected, (state) => {
+      state.loading = false;
+    });
+}
 });
 
 export const initPosts = () => async (dispatch, getState) => {
@@ -53,5 +68,27 @@ export const fetchPosts = () => async (dispatch, getState) => {
     dispatch(setLoading(false));
   }
 };
+
+export const createPost = createAsyncThunk(
+  "posts/createPost",
+  async ({ title, description, file, email, username }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${apiUrl}/create`, {
+        title,
+        description,
+        file,
+        email,
+        username
+      }, {
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Ошибка");
+    }
+  }
+);
 
 export default postSlice.reducer;
