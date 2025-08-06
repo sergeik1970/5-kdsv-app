@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { fetchPosts } from './redux/slices/postsSlice';
+import { fetchPosts, initPosts } from './redux/slices/postsSlice';
 import { hideNotice } from "./redux/slices/noticeSlice";
 import './Home.css';
 
@@ -25,9 +25,7 @@ function Home() {
     }, [loading, hasMore]);
 
     useEffect(() => {
-        if (posts.length === 0) {
-            dispatch(fetchPosts());
-        }
+        dispatch(initPosts())
     }, []);
 
     useEffect(() => {

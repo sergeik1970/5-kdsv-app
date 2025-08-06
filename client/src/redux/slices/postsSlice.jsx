@@ -25,6 +25,13 @@ const postSlice = createSlice({
   }
 });
 
+export const initPosts = () => async (dispatch, getState) => {
+  const { posts } = getState().posts;
+  if (posts.length === 0) {
+    dispatch(fetchPosts());
+  }
+};
+
 export const {
   setLoading, addPosts, incrementPage, setHasMore, resetPosts
 } = postSlice.actions;
