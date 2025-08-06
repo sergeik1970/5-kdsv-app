@@ -5,6 +5,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 const initialState = {
   posts: [],
+  post: null,
   page: 1,
   loading: false,
   hasMore: true,
@@ -26,15 +27,29 @@ const postSlice = createSlice({
     }
   },
   extraReducers: (builder) => {
+    builder
+      .addCase(createPost.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createPost.fulfilled, (state, action) => {
+        state.loading = false;
+        state.posts.unshift(action.payload); // добавим пост в начало списка
+      })
+      .addCase(createPost.rejected, (state) => {
+        state.loading = false;
+      });
+  },
+
+  extraReducers: (builder) => {
   builder
-    .addCase(createPost.pending, (state) => {
+    .addCase(fetchPostById.pending, (state) => {
       state.loading = true;
     })
-    .addCase(createPost.fulfilled, (state, action) => {
+    .addCase(fetchPostById.fulfilled, (state, action) => {
       state.loading = false;
-      state.posts.unshift(action.payload); // добавим пост в начало списка
+      state.post = action.payload;
     })
-    .addCase(createPost.rejected, (state) => {
+    .addCase(fetchPostById.rejected, (state) => {
       state.loading = false;
     });
 }
@@ -87,6 +102,18 @@ export const createPost = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Ошибка");
+    }
+  }
+);
+
+export const fetchPostById = createAsyncThunk(
+  "posts/fetchPostById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${apiUrl}/getpostbyid/${id}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
     }
   }
 );
