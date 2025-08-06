@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setUsername, setEmail, setPassword, resetRegister } from "./redux/slices/registerSlice";
+import { setUsername, setEmail, setPassword, resetRegister, registerUser } from "./redux/slices/registerSlice";
 import "./Register.css";
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -9,20 +9,19 @@ const apiUrl = import.meta.env.VITE_API_URL;
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { username, email, password } = useSelector((state) => state.register);
+  const { username, email, password, loading, error } = useSelector((state) => state.register);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios
-      .post(`${apiUrl}/register`, { username, email, password }, { withCredentials: true })
-      .then((res) => {
+    dispatch(registerUser({ username, email, password }))
+      .unwrap()
+      .then(() => {
         dispatch(resetRegister());
         navigate("/login");
       })
       .catch((err) => {
-        alert("Registration failed. Please try again.");
-        console.log(err);
+        alert("Ошибка регистрации: " + err);
       });
   };
 
