@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { fetchPostById } from "./redux/slices/postsSlice";
+import "./Post.css"
 
 function Post() {
   const { id } = useParams();
