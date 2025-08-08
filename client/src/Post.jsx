@@ -33,6 +33,7 @@ function Post() {
         <p className="post-description">{post.description}</p>
         <p className="post-email">
           By <b>{post.username}</b>
+          By <b>{post.email}</b>
         </p>
         {user.email === post.email && (
           <div className="buttons">

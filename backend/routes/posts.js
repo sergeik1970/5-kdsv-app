@@ -36,6 +36,7 @@ const upload = multer({ storage });
 router.post('/create', async (req, res) => {
   const { title, description, file, email, username } = req.body;
   if (!file) return res.status(400).json("Файл обязателен");
+  if (!email) return res.status(400).json("Email обязателен");
 
   try {
     const newPost = await Post.create({ title, description, file, email, username });
