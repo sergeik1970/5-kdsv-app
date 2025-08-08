@@ -1,6 +1,9 @@
 import express from 'express';
 import multer from 'multer';
+import mongoose from 'mongoose';
 import Post from '../models/Post.js';
+import auth from "./auth.js"
+import auth2 from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -76,6 +79,47 @@ router.get('/getpostbyid/:id', async (req, res) => {
     res.json(post);
   } catch (err) {
     res.status(500).json({ message: "Ошибка при получении поста" });
+  }
+});
+
+router.delete("/deletepostbyid/:id", auth2, async (req, res) => {
+  try {
+    console.log("=== УДАЛЕНИЕ ПОСТА ===");
+    console.log("req.params.id:", req.params.id);
+    console.log("req.user:", req.user);
+
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      console.log("❌ Некорректный ID");
+      return res.status(400).json("Некорректный id");
+    }
+
+    const post = await Post.findById(id);
+    console.log("Найденный пост:", post);
+
+    if (!post) {
+      console.log("❌ Пост не найден");
+      return res.status(404).json("Пост не найден");
+    }
+
+    console.log("req.user:", req.user);
+    if (!req.user?.email) {
+      return res.status(401).json("No token / user in request");
+    }
+
+    if (post.email !== req.user.email) {
+      console.log(`❌ Нет прав: post.email=${post.email}, user.email=${req.user.email}`);
+      return res.status(403).json("Нет прав для удаления этого поста");
+    }
+
+    await Post.findByIdAndDelete(id);
+    console.log("✅ Пост удалён");
+
+    return res.status(200).json({ message: "Пост удалён", id });
+  } catch (err) {
+    console.error("❌ Ошибка в DELETE /deletepostbyid:", err);
+    return res.status(500).json("Ошибка сервера");
   }
 });
 

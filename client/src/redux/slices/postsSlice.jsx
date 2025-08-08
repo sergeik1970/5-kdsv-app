@@ -37,22 +37,24 @@ const postSlice = createSlice({
       })
       .addCase(createPost.rejected, (state) => {
         state.loading = false;
+      })
+      .addCase(fetchPostById.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchPostById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.post = action.payload;
+      })
+      .addCase(fetchPostById.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(deletePostById.fulfilled, (state, action) => {
+        state.posts = state.posts.filter(post => post._id !== action.payload);
+        if (state.post && state.post._id === action.payload) {
+          state.post = null;
+        }
       });
   },
-
-  extraReducers: (builder) => {
-  builder
-    .addCase(fetchPostById.pending, (state) => {
-      state.loading = true;
-    })
-    .addCase(fetchPostById.fulfilled, (state, action) => {
-      state.loading = false;
-      state.post = action.payload;
-    })
-    .addCase(fetchPostById.rejected, (state) => {
-      state.loading = false;
-    });
-}
 });
 
 export const initPosts = () => async (dispatch, getState) => {
@@ -114,6 +116,26 @@ export const fetchPostById = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const deletePostById = createAsyncThunk(
+  "posts/deletePostById",
+  async (id, { rejectWithValue }) => {
+    try {
+      console.log("🗑 Удаление поста, id:", id);
+      console.log("URL:", `${apiUrl}/deletepostbyid/${id}`);
+
+      const response = await axios.delete(`${apiUrl}/deletepostbyid/${id}`, {
+        withCredentials: true, // если токен в куках
+      });
+
+      console.log("✅ Сервер ответил:", response.data);
+      return id;
+    } catch (error) {
+      console.error("❌ Ошибка при удалении поста:", error.response?.data || error.message);
+      return rejectWithValue(error.response?.data || "Ошибка сервера");
     }
   }
 );

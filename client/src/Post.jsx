@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { fetchPostById } from "./redux/slices/postsSlice";
+import { fetchPostById, deletePostById } from "./redux/slices/postsSlice";
 import "./Post.css"
 
 function Post() {
@@ -18,11 +18,21 @@ function Post() {
 
   const handleDelete = () => {
     if (window.confirm("Вы действительно хотите удалить пост?")) {
-      axios.delete(`${import.meta.env.VITE_API_URL}/deletepostbyid/${id}`)
-        .then(() => navigate("/"))
-        .catch(console.error);
+      dispatch(deletePostById(id))
+        .unwrap()
+        .then(() => {
+          navigate("/");
+        })
+        .catch((err) => {
+          alert(err);
+          console.error("Ошибка при удалении поста:", err);
+        });
     }
   };
+
+  console.log('user:', user);
+  console.log('post:', post);
+  console.log('user.email:', user?.email, 'post.email:', post?.email);
 
   if (!post) return <div>Загрузка...</div>;
 

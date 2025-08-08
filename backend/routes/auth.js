@@ -68,12 +68,12 @@ router.post("/login", async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "None"
+      secure: false, // после поменять на true
+      sameSite: "Lax" // после поменять на "None"
     });
 
     console.log("✅ Успешный вход:", user.username);
-    return res.status(200).json({ message: "Login successful", username: user.username });
+    return res.status(200).json({ message: "Login successful", username: user.username, email: user.email, token });
   } catch (err) {
     console.error("❌ Ошибка при входе:", err);
     return res.status(500).json("Server error");
