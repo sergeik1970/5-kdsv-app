@@ -6,6 +6,14 @@ const apiUrl = import.meta.env.VITE_API_URL;
 const initialState = {
   posts: [],
   post: null,
+  editPost: {
+    title: "",
+    description: "",
+    file: null
+  },
+  newPostTitle: "",
+  newPostDescription: "",
+  newPostFile: null,
   page: 1,
   loading: false,
   hasMore: true,
@@ -24,6 +32,17 @@ const postSlice = createSlice({
       state.posts = [];
       state.page = 1;
       state.hasMore = true;
+    },
+    setEditTitle: (state, action) => { state.editPost.title = action.payload },
+    setEditDescription: (state, action) => { state.editPost.description = action.payload },
+    setEditFile: (state, action) => { state.editPost.file = action.payload },
+    setNewPostTitle: (state, action) => { state.newPostTitle = action.payload },
+    setNewPostDescription: (state, action) => { state.newPostDescription = action.payload },
+    setNewPostFile: (state, action) => { state.newPostFile = action.payload },
+    resetNewPostForm: (state) => {
+      state.newPostTitle = "";
+      state.newPostDescription = "";
+      state.newPostFile = null;
     }
   },
   extraReducers: (builder) => {
@@ -53,6 +72,13 @@ const postSlice = createSlice({
         if (state.post && state.post._id === action.payload) {
           state.post = null;
         }
+      })
+      .addCase(updatePostById.fulfilled, (state, action) => {
+        // обновим одиночный пост
+        state.post = action.payload;
+        // и список, если он загружен
+        const i = state.posts.findIndex(p => p._id === action.payload._id);
+        if (i !== -1) state.posts[i] = action.payload;
       });
   },
 });
@@ -139,5 +165,33 @@ export const deletePostById = createAsyncThunk(
     }
   }
 );
+
+export const updatePostById = createAsyncThunk(
+  "posts/updatePostById",
+  async ({ id, title, description, file }, { rejectWithValue }) => {
+    try {
+      const payload = { title, description };
+      if (file) payload.file = file; // отправляем только если выбран новый
+
+      const { data } = await axios.put(`${apiUrl}/editpostbyid/${id}`, payload, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      });
+      return data; // обновлённый пост
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Ошибка при редактировании");
+    }
+  }
+);
+
+export const {
+  setEditDescription,
+  setEditFile,
+  setEditTitle,
+  resetNewPostForm,
+  setNewPostDescription,
+  setNewPostFile,
+  setNewPostTitle
+} = postSlice.actions
 
 export default postSlice.reducer;

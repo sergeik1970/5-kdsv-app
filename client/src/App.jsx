@@ -10,6 +10,7 @@ import Register from './Register'
 import Login from './Login'
 import CreatePost from './CreatePost'
 import Post from './Post'
+import EditPost from './EditPost'
 
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -55,6 +56,7 @@ function App() {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/create" element={<CreatePost />}></Route>
         <Route path='/post/:id' element={<Post />}></Route>
+        <Route path='/editpostbyid/:id' element={<EditPost />}></Route> 
       </Routes>
     </BrowserRouter>
   )

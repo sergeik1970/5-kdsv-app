@@ -123,4 +123,32 @@ router.delete("/deletepostbyid/:id", auth2, async (req, res) => {
   }
 });
 
+router.put("/editpostbyid/:id", auth2, async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id))
+      return res.status(400).json("Некорректный id");
+
+    const post = await Post.findById(id);
+    if (!post) return res.status(404).json("Пост не найден");
+
+    if (!req.user?.email) return res.status(401).json("No token / user in request");
+    if (post.email !== req.user.email)
+      return res.status(403).json("Нет прав для редактирования этого поста");
+
+    // что можно обновлять
+    const { title, description, file } = req.body;
+    if (title !== undefined) post.title = title;
+    if (description !== undefined) post.description = description;
+    // file — только если прислали новый (base64). Если не прислали — не трогаем
+    if (file) post.file = file;
+
+    const updated = await post.save();
+    return res.json(updated);
+  } catch (e) {
+    console.error("PUT /editpostbyid error:", e);
+    return res.status(500).json("Ошибка сервера");
+  }
+});
+
 export default router;
