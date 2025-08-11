@@ -1,5 +1,4 @@
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsername, setEmail, setPassword, resetRegister, registerUser } from "./redux/slices/registerSlice";
 import "./Register.css";

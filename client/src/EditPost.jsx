@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchPostById, setEditTitle, setEditDescription, setEditFile, updatePostById } from "./redux/slices/postsSlice";
 
-const apiUrl = import.meta.env.VITE_API_URL;
+// const apiUrl = import.meta.env.VITE_API_URL;
 
 function EditPost() {
   const { id } = useParams();
@@ -15,6 +15,7 @@ function EditPost() {
 
   // загружаем пост
   useEffect(() => {
+    // Заполнение формы редактирования поста
     dispatch(fetchPostById(id)).unwrap().then((data) => {
       dispatch(setEditTitle(data.title || ""));
       dispatch(setEditDescription(data.description || ""));
@@ -32,6 +33,7 @@ function EditPost() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Отправка редактированного поста
     dispatch(updatePostById({
       id,
       title: editPost.title,
@@ -39,10 +41,12 @@ function EditPost() {
       file: editPost.file
     }))
       .unwrap()
+      // В случае успеха переходим на страницу поста
       .then(() => navigate(`/post/${id}`))
       .catch(console.error);
   };
 
+  // При выборе нового файла
   const handleFileChange = (file) => {
     const reader = new FileReader();
     reader.onload = () => {

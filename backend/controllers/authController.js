@@ -1,3 +1,5 @@
+// Не участвует в проекте, отключен в auth.js
+
 export const login = (req, res) => {
     console.log("Данные на вход:", req.body);
     res.send("Login работает")

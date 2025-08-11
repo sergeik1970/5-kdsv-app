@@ -1,8 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setEmail, setPassword, loginUser } from "./redux/slices/loginSlice";
-import { setUser } from "./redux/slices/userSlice";
+// import { setUser } from "./redux/slices/userSlice";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -12,34 +12,11 @@ function Login() {
 
   const { email, password, loading, error } = useSelector((state) => state.login);
 
-  // перенести в thunk
-  // axios.defaults.withCredentials = true;
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   axios
-  //     .post(`${apiUrl}/login`, { email, password }, { withCredentials: true })
-  //     .then((res) => {
-  //       if (res.data.username) {
-  //         dispatch(setUser(res.data));
-  //         dispatch(resetLogin());
-  //         navigate("/");
-  //       } else {
-  //         alert("Неверный логин или пароль");
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       alert("Ошибка при входе");
-  //       console.log(err);
-  //     });
-  // };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(loginUser({ email, password }))
       .unwrap()
       .then(() => {
-        // dispatch(resetLogin());
         navigate('/');
       })
       .catch(() => {}); // Ошибка уже в state.error

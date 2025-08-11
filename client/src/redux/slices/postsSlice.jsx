@@ -1,33 +1,46 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+// localhost
 const apiUrl = import.meta.env.VITE_API_URL;
 
+// Начальное состояние
 const initialState = {
+  // Список всех постов
   posts: [],
+  // Выбранный пост, изначально null
   post: null,
+  // Данные для редактируемого поста
   editPost: {
     title: "",
     description: "",
     file: null
   },
+  // Поля формы создания поста
   newPostTitle: "",
   newPostDescription: "",
   newPostFile: null,
+  // Текущая страница (для загрузки постов)
   page: 1,
+  // Индикатор загрузки
   loading: false,
+  // Есть ли ещё посты для загрузки
   hasMore: true,
+  // Саколько постов загрузить за один запрос
   limit: 2,
 };
 
+// Создаем slice с именем posts
 const postSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
     setLoading: (state, action) => { state.loading = action.payload },
+    // Добавляет новые посты в начало списка
     addPosts: (state, action) => { state.posts.push(...action.payload) },
     incrementPage: (state) => { state.page += 1 },
     setHasMore: (state, action) => { state.hasMore = action.payload },
+    // Очищает список постов
     resetPosts: (state) => {
       state.posts = [];
       state.page = 1;
@@ -52,7 +65,8 @@ const postSlice = createSlice({
       })
       .addCase(createPost.fulfilled, (state, action) => {
         state.loading = false;
-        state.posts.unshift(action.payload); // добавим пост в начало списка
+        // Добавление поста в начало списка
+        state.posts.unshift(action.payload);
       })
       .addCase(createPost.rejected, (state) => {
         state.loading = false;
@@ -74,15 +88,16 @@ const postSlice = createSlice({
         }
       })
       .addCase(updatePostById.fulfilled, (state, action) => {
-        // обновим одиночный пост
+        // Обновим одиночный пост
         state.post = action.payload;
-        // и список, если он загружен
+        // И список, если он загружен
         const i = state.posts.findIndex(p => p._id === action.payload._id);
         if (i !== -1) state.posts[i] = action.payload;
       });
   },
 });
 
+// Если постов нет, загружаем их
 export const initPosts = () => async (dispatch, getState) => {
   const { posts } = getState().posts;
   if (posts.length === 0) {
@@ -94,12 +109,14 @@ export const {
   setLoading, addPosts, incrementPage, setHasMore, resetPosts
 } = postSlice.actions;
 
+// Загрузка постов постранично
 export const fetchPosts = () => async (dispatch, getState) => {
   const { page, hasMore, loading, limit } = getState().posts;
   if (!hasMore || loading) return;
 
   try {
     dispatch(setLoading(true));
+    // Получение постов с сервера
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/getposts?page=${page}`);
     const data = res.data;
     dispatch(addPosts(data));
@@ -116,6 +133,7 @@ export const createPost = createAsyncThunk(
   "posts/createPost",
   async ({ title, description, file, email, username }, { rejectWithValue }) => {
     try {
+      // Запрос с данными
       const response = await axios.post(`${apiUrl}/create`, {
         title,
         description,
@@ -123,6 +141,7 @@ export const createPost = createAsyncThunk(
         email,
         username
       }, {
+        // Сервер должен вернуть ответ в формате JSON
         headers: {
           "Content-Type": "application/json",
         }
@@ -134,6 +153,7 @@ export const createPost = createAsyncThunk(
   }
 );
 
+// Чтобы получить конкретный пост
 export const fetchPostById = createAsyncThunk(
   "posts/fetchPostById",
   async (id, { rejectWithValue }) => {
@@ -145,7 +165,7 @@ export const fetchPostById = createAsyncThunk(
     }
   }
 );
-
+// Чтобы удалить конкретный пост
 export const deletePostById = createAsyncThunk(
   "posts/deletePostById",
   async (id, { rejectWithValue }) => {
@@ -166,15 +186,18 @@ export const deletePostById = createAsyncThunk(
   }
 );
 
+// Чтобы обновить конкретный пост
 export const updatePostById = createAsyncThunk(
   "posts/updatePostById",
   async ({ id, title, description, file }, { rejectWithValue }) => {
     try {
       const payload = { title, description };
-      if (file) payload.file = file; // отправляем только если выбран новый
+      // Тольк если есть новый файл, то отправлять его
+      if (file) payload.file = file;
 
       const { data } = await axios.put(`${apiUrl}/editpostbyid/${id}`, payload, {
         withCredentials: true,
+        // Сервер должен вернуть ответ в формате JSON
         headers: { "Content-Type": "application/json" },
       });
       return data; // обновлённый пост
@@ -184,6 +207,7 @@ export const updatePostById = createAsyncThunk(
   }
 );
 
+// Экспорт экшена и редьюсера
 export const {
   setEditDescription,
   setEditFile,

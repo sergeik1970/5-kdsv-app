@@ -18,21 +18,10 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 function App() {
   const dispatch = useDispatch();
-
-  // Автоотправление cookie
+  
   axios.defaults.withCredentials = true;
-  // useEffect для получения данных с сервера
-  // useEffect(() => {
-  //   // Получение данных с сервера
-  //   axios.get(apiUrl)
-  //     .then(user => {
-  //       dispatch(setUser(user.data))
-  //       console.log(user)
-  //     })
-  //     .catch(err => console.log("Ошибка при получении пользователя: ", err))
 
-  // }, [])
-
+  // Проверка авторизации
   useEffect(() => {
   axios.get(`${apiUrl}/me`, { withCredentials: true })
     .then(res => {
@@ -45,7 +34,7 @@ function App() {
     });
 }, []);
 
-  const user = useSelector((state) => state.user);
+  // const user = useSelector((state) => state.user);
 
 
   return (

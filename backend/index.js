@@ -8,17 +8,18 @@ import postRoutes from './routes/posts.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
-// Подключение express
+// Создание сервера
 const app = express();
 // app.use(express.json());
 
-// Подключение frontа
+// Подключение frontа, разрешение запросов с него
 app.use(cors({
     origin: process.env.FRONTEND_URL,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    // Позволяем передавать куки
     credentials: true
 }))
-
+// Для отправки больших файлов
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ limit: '20mb', extended: true }));
 
@@ -26,7 +27,9 @@ app.use(express.urlencoded({ limit: '20mb', extended: true }));
 app.use(cookieParser());
 
 // Маршруты
+// Авторизация
 app.use(authRoutes);
+// Посты и все что с ними связано
 app.use('/', postRoutes);
 
 // Проверка

@@ -11,6 +11,7 @@ function Home() {
 
     const showNotice = useSelector(state => state.notice.showNotice);
 
+    // Реф под текущий IntersectionObserver
     const observer = useRef();
     const lastPostRef = useCallback(node => {
         if (loading) return;
