@@ -80,8 +80,8 @@ router.post("/login", async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       // Чтобы не принимались незащищенные запросы через http, только через https
-      secure: false, // после поменять на true
-      sameSite: "Lax" // после поменять на "None"
+      secure: true, // после поменять на true
+      sameSite: "None" // после поменять на "None"
     });
 
     console.log("✅ Успешный вход:", user.username);
